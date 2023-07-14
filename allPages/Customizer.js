@@ -1,12 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSnapshot } from "valtio";
 import state from "../store";
-import config from "../config/config.js";
-import { download } from "../public";
-import { downloadCanvasToImage, reader } from "../config/helpers.js";
+import { reader } from "../config/helpers.js";
 import { EditorTabs, FilterTabs, DecalTypes } from "../config/constants.js";
 import { fadeAnimation, slideAnimation } from "../config/motion.js";
 import {
@@ -19,7 +17,6 @@ import {
 
 export default function Customizer() {
   const snap = useSnapshot(state);
-
   const [file, setFile] = useState("");
   const [prompt, setPrompt] = useState("");
   const [generatingImg, setGeneratingImg] = useState(false);
@@ -36,10 +33,19 @@ export default function Customizer() {
         return <ColorPicker />;
       case "filepicker":
         return <FilePicker file={file} setFile={setFile} readFile={readFile} />;
-      case "aipicker":
-        return <AiPicker />;
       default:
         return null;
+    }
+  };
+
+  const handleSubmit = async (type) => {
+    if (!prompt) return alert("Please enter a prompt");
+    try {
+    } catch (error) {
+      alert(error);
+    } finally {
+      setGeneratingImg(false);
+      setActiveEditorTab("");
     }
   };
 
@@ -64,6 +70,7 @@ export default function Customizer() {
       default:
         state.isLogoTexture = true;
         state.isFullTexture = false;
+        break;
     }
 
     setActiveFilterTab((prevState) => {
